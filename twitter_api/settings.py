@@ -33,12 +33,6 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'api',
     "accounts",
-    "django.contrib.sites",
-    "allauth",
-    'allauth.socialaccount',
-    "allauth.account",
-    'dj_rest_auth',
-    'dj_rest_auth.registration', 
     "corsheaders",
 ]
 
@@ -50,30 +44,9 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    "allauth.account.middleware.AccountMiddleware",
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-AUTHENTICATION_BACKENDS = [
-    "django.contrib.auth.backends.ModelBackend",
-    "allauth.account.auth_backends.AuthenticationBackend",
-]
-
-SITE_ID = 1
-
-# メールアドレスで認証
-ACCOUNT_LOGIN_METHODS = {'username', 'email'}
-# 新しいサインアップフィールド設定
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'birthday*', 'password1*', 'password2*']
-# レート制限設定
-ACCOUNT_RATE_LIMITS = {
-    'login_failed': '5/5m',  # 5回失敗で5分間ロック
-}
-# メール検証の方法 (mandatory, optional, or none)
-ACCOUNT_EMAIL_VERIFICATION = 'none'
-# ログイン/ログアウト後のリダイレクト先
-LOGIN_REDIRECT_URL = '/'
-ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'
 # カスタムUserモデルを指定
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
@@ -159,8 +132,4 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ],
-}
-
-REST_AUTH = {
-    "REGISTER_SERIALIZER": "accounts.serializers.CustomRegisterSerializer",
 }

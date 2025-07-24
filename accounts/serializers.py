@@ -1,10 +1,11 @@
-from django.db import transaction
 from rest_framework import serializers
 from .models import CustomUser
 
 class CustomDateField(serializers.DateField):
     def to_internal_value(self, data):
-        return None if data == '' else data
+        if data == '':
+            return None
+        return super().to_internal_value(data)
 
 class CustomRegisterSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
@@ -17,10 +18,9 @@ class CustomRegisterSerializer(serializers.ModelSerializer):
     
     def validate(self, attrs):
         if attrs['password1'] != attrs['password2']:
-            raise serializers.ValidationError({'password': "Password fields didn' t match."})
+            raise serializers.ValidationError({'non_field_errors': "パスワードが一致しません。"})
         return attrs
 
-    @transaction.atomic
     def create(self, validated_data):
         validated_data.pop('password2')
         birthday = validated_data.get('birthday', None)
