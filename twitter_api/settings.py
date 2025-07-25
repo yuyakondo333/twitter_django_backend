@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'api',
+    "accounts",
     "django.contrib.sites",
     "allauth",
     "allauth.account",
@@ -55,22 +56,20 @@ AUTHENTICATION_BACKENDS = [
 SITE_ID = 1
 
 # メールアドレスで認証
-ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
-# サインアップ時にユーザー名を必須にするか
-ACCOUNT_USERNAME_REQUIRED = True
-# サインアップ時にメールアドレスを必須にするか
-ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_LOGIN_METHODS = {'username', 'email'}
+# 新しいサインアップフィールド設定
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
+# レート制限設定
+ACCOUNT_RATE_LIMITS = {
+    'login_failed': '5/5m',  # 5回失敗で5分間ロック
+}
 # メール検証の方法 (mandatory, optional, or none)
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 # ログイン/ログアウト後のリダイレクト先
 LOGIN_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'
-# ログイン試行回数制限
-ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
-# ログイン制限として300秒 (5分) ロック
-ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 300
 # カスタムUserモデルを指定
-AUTH_USER_MODEL = 'accounts.User'
+AUTH_USER_MODEL = 'accounts.CustomUser'
 
 ROOT_URLCONF = 'twitter_api.urls'
 
@@ -109,6 +108,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            "min_length": 9,
+        }
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
