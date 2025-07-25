@@ -1,0 +1,15 @@
+# Enviroment variables
+.env
+
+# Python
+*.log
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Virtual environment
+venv/
+
+.DS_Store
+db.sqlite3
