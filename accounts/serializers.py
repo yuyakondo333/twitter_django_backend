@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import CustomUser
+import re
 
 class CustomDateField(serializers.DateField):
     def to_internal_value(self, data):
@@ -15,6 +16,10 @@ class CustomRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['username', 'email', 'password1', 'password2', 'birthday']
+
+    def validate_username(self, value):
+        if not re.match(r'^[\w@+.-]+$', value):
+            raise serializers.ValidationError({'username': "全角文字は使用できません。"})
     
     def validate(self, attrs):
         if attrs['password1'] != attrs['password2']:
