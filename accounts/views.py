@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import CustomRegisterSerializer
 
+
 class UserRegistrationView(APIView):
     def post(self, request):
         serializer = CustomRegisterSerializer(data=request.data)
@@ -10,7 +11,10 @@ class UserRegistrationView(APIView):
             try:
                 serializer.save()
             except Exception:
-                return Response({"error": "Something went wrong..."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                return Response(
+                    {"error": "Something went wrong..."},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
             return Response({
                 "message": "ユーザーの作成に成功しました。"
             }, status=status.HTTP_201_CREATED)
