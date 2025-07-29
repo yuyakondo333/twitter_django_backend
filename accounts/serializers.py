@@ -10,11 +10,11 @@ class CustomDateField(serializers.DateField):
 
 
 class CustomRegisterSerializer(serializers.ModelSerializer):
-    password1 = serializers.CharField(
+    password = serializers.CharField(
         style={'input_type': 'password'},
         write_only=True
     )
-    password2 = serializers.CharField(
+    password_confirmation = serializers.CharField(
         style={'input_type': 'password'},
         write_only=True
     )
@@ -22,22 +22,22 @@ class CustomRegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ['username', 'email', 'password1', 'password2', 'birthday']
+        fields = ['username', 'email', 'password', 'password_confirmation', 'birthday']
 
     def validate(self, attrs):
-        if attrs['password1'] != attrs['password2']:
+        if attrs['password'] != attrs['password_confirmation']:
             raise serializers.ValidationError({
                 'non_field_errors': "パスワードが一致しません。"
             })
         return attrs
 
     def create(self, validated_data):
-        validated_data.pop('password2')
+        validated_data.pop('password_confirmation')
         birthday = validated_data.get('birthday', None)
         user = CustomUser.objects.create_user(
             username=validated_data['username'],
             email=validated_data['email'],
-            password=validated_data['password1'],
+            password=validated_data['password'],
             birthday=birthday,
         )
         return user
